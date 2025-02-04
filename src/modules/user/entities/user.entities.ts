@@ -5,6 +5,7 @@ import {
   Generated,
   BeforeInsert,
   BeforeUpdate,
+  IsNull,
 } from 'typeorm';
 
 @Entity('user')
@@ -43,4 +44,7 @@ export class User {
   setUpdatedAt() {
     this.updated_at = new Date();
   }
+
+  @Column({ nullable: true })
+  refresh_token?: string;
 }

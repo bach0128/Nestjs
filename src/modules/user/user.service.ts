@@ -68,4 +68,22 @@ export class UserService {
     }
     return null;
   }
+
+  async saveRefreshToken(userId: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    user.refresh_token = hashedRefreshToken;
+    return this.userRepository.save(user);
+  }
+
+  async verifyRefreshToken(userId: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const status = bcrypt.compareSync(refreshToken, user.refresh_token);
+
+    if (user) {
+      if (status) {
+        return user;
+      }
+    }
+  }
 }
